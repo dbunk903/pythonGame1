@@ -1,4 +1,3 @@
-from turtle import width
 import pygame
 
 pygame.init() # 초기화
@@ -17,6 +16,8 @@ clock = pygame.time.Clock()
 # 이동속도
 character_speed = 0.6
 
+
+
 # 배경 이미지 불러오기
 background = pygame.image.load('/Users/jeroz/Library/Mobile Documents/com~apple~CloudDocs/Documents/AllCode/NaDo/pythonGame/pygame_basic/pythonGameBackground.png')
 
@@ -27,6 +28,14 @@ character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = screen_width / 2 - character_width / 2 # 화면 가로의 절반 크기에 위치
 character_y_pos = screen_height - character_height # 세로 크기 가장 아래에 
+
+# Enemy 
+enemy = pygame.image.load('/Users/jeroz/Library/Mobile Documents/com~apple~CloudDocs/Documents/AllCode/NaDo/pythonGame/pygame_basic/enemy.png')
+enemy_size = enemy.get_rect().size #가로,세로 크기를 (이미지의) 크기를 구해옴옴
+enemy_width = enemy_size[0]
+enemy_height = enemy_size[1]
+enemy_x_pos = (screen_width / 2) - (enemy_width / 2) # 화면 가로의 절반 크기에 위치
+enemy_y_pos = (screen_height / 2) - (enemy_height / 2) # 세로 크기 가장 아래에 
 
 # 이동할 좌표 
 to_x = 0
@@ -74,10 +83,24 @@ while running:
         elif character_y_pos > screen_height - character_height:
             character_y_pos = screen_height -  character_height
         
-                 
+        # 충돌 처리를 위한 rect 정보 업데이트
+        character_rect = character.get_rect()
+        character_rect.left = character_x_pos
+        character_rect.top = character_y_pos
+
+        enemy_rect = enemy.get_rect()
+        enemy_rect.left = enemy_x_pos #enemy는 변화 없어서 쓰일 일이 없다.
+        enemy_rect.top = enemy_y_pos
+        
+        # 충돌 체크
+        if character_rect.colliderect(enemy_rect):
+            print("충돌했어요")
+            running = False
     screen.blit(background, (0,0)) # 배경 그리기
     
     screen.blit(character, (character_x_pos,character_y_pos))
+
+    screen.blit(enemy, (enemy_x_pos,enemy_y_pos))
     # screen.fill((0,0,255)) 수동을 채울 수도 있다.
     pygame.display.update() # 게임 화면을 다시 그리기
     
